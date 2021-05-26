@@ -1,6 +1,11 @@
 import json
 
+import tkinter as tk
+import tkinter.ttk as ttk
+from tkinter import font as tkFont
+from tkinter import scrolledtext as tkST
 
+# ========== LÓGICA INTERNA ====================================================
 def JSONtoDict(direction):
     with open(direction, encoding="utf-8") as JSONFile:
         # Removiendo comentarios
@@ -59,17 +64,45 @@ def replaceFromDict(string, dictionary, prefix=""):
         string = string.replace(prefix+i, dictionary[i])
     return string
 
-def ReplaceSymbols(string):
+def replaceSymbols(string):
     string = replaceTokens(string)
     string = replaceFromDict(string, superscript, "^")
     string = replaceFromDict(string, subscript, "_")
     string = replaceFromDict(string, miscellany)
     return string
 
-string = r"Sea Nx \in G/N, <<dado que>> (Nx)^2 = Nx^2 y x^2 \in N ``entonces'' (Nx)^2 = Ne, mostrando así que Nx tiene orden 2"
 
-A = ReplaceSymbols(string)
+# ========== INTERFAZ GRÁFICA ==================================================
 
-print("\n", "Entrada:", string, "\n")
-print("\n", "Salida", A, "\n")
+Window = tk.Tk()
+Window.minsize(500,300)
 
+MainFrame = ttk.Frame(Window, width=400, height=300)
+MainFrame.pack(pady=5)
+
+
+LabelEntry = ttk.Label(MainFrame, text="Introduzca su entrada", font=tkFont.Font(weight="bold"))
+LabelEntry.grid(row=0, column=0, padx=5, pady=5)
+
+EntryText = tkST.ScrolledText(MainFrame, width=60, height=7, wrap="word")
+EntryText.grid(row=1, column=0, padx=5, pady=5)
+
+OutputText = tkST.ScrolledText(MainFrame, width=60, height=7, font=tkFont.Font(size=11), state='disabled', wrap="word")
+OutputText.grid(row=2, column=0, padx=5, pady=5)
+
+
+# Actualización cada vez que se agrega una letra
+def UpdateText(event):
+    string = EntryText.get("1.0", "end")
+    string = replaceSymbols(string)
+    
+    OutputText.configure(state="normal")
+    OutputText.delete("1.0", "end")
+    OutputText.insert("1.0", string)
+    OutputText.configure(state="disabled")
+
+EntryText.bind("<KeyRelease>", UpdateText)
+
+
+
+Window.mainloop()
