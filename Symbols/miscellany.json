@@ -1,0 +1,10 @@
+//  Diccionario de símbolos miscelaneos Unicode v1.0
+//  By Carlos Cuxim
+
+
+{
+    "<<": "«",
+    ">>": "»",
+    "``": "“",
+    "''": "”"
+}
