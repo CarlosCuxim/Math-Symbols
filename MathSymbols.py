@@ -101,6 +101,9 @@ def UpdateText(event):
     OutputText.insert("1.0", string)
     OutputText.configure(state="disabled")
 
+    with open("returntext.txt", "w") as file:
+        file.write(string)
+
 EntryText.bind("<KeyRelease>", UpdateText)
 
 
